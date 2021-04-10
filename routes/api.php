@@ -18,4 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('posts', 'App\Http\Controllers\Api\PostController');
+/**
+ * 'auth' -> autenticación
+ * 'auth' -> autenticación mediante token para APIs
+ */
+Route::apiResource('posts', 'App\Http\Controllers\Api\PostController')->middleware('auth:api');

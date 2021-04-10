@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
-use Illuminate\Http\Request;
+use App\Http\Requests\Post as PostRequest;
 
 class PostController extends Controller
 {
+    protected $post;
+    public function __construct(Post $post)
+    {
+        $this->post = $post;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +20,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        //return dd($this->post->paginate());
+        /**
+         * Una api por lo general siempre trabaja con JSON
+         */
+        return response()->json($this->post->paginate(), 200); // por omision status 200
     }
 
     /**
@@ -24,9 +33,9 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        $post = Post::create($request->all());
+        $post = $this->post->create($request->all());
         return response()->json($post, 201);
     }
 
@@ -38,7 +47,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return response()->json($post);
     }
 
     /**
@@ -48,9 +57,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
-        //
+        $post->update($request->all());
+        return response()->json($post);
     }
 
     /**
@@ -61,6 +71,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return response()->json(null,204);
     }
 }
